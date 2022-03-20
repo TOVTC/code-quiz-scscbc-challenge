@@ -105,6 +105,9 @@ var startQuiz = function() {
         timer--;
         timeRemainingEl.textContent = timer;
         if (timer <= 0 || i > questions.length) {
+            if (timer < 0) {
+                timeRemainingEl.textContent = 0;
+            }
             clearInterval(subtract)
             endFormat();}
         }, 1000
