@@ -30,9 +30,10 @@ mainEl.appendChild(quizEl);
 
 //initial quiz format set up
 var titleEl = document.createElement("h1");
-var listEl = document.createElement("ol");
+var orderedListEl = document.createElement("ol");
+orderedListEl.className = "orderedListEl";
 quizEl.appendChild(titleEl);
-quizEl.appendChild(listEl);
+quizEl.appendChild(orderedListEl);
 
 //question counter
 var i = 0;
@@ -44,15 +45,30 @@ var iterator = function() {
 correctResponse = ""
 
 //set up for intro page
-var introObject = function() {
+var introFormat = function() {
     titleEl.textContent = "Coding Quiz Challenge"
-    var paraEl = document.createElement("p");
-    paraEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!"
-    quizEl.appendChild(paraEl);
+    var startParaEl = document.createElement("p");
+    startParaEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!"
+    startParaEl.className = "startParaEl"
+    quizEl.appendChild(startParaEl);
     var startButtonEl = document.createElement("button");
     startButtonEl.textContent = "Start Quiz";
     startButtonEl.className = "startButtonEl";
     quizEl.appendChild(startButtonEl);
+}
+
+var endFormat = function() {
+    var orderedListEl = document.querySelector(".orderedListEl");
+    orderedListEl.remove();
+    titleEl.textContent = "All Done!"
+    var paraEl = document.createElement("p");
+    paraEl.textContent = "Your final score is __________"
+    paraEl.className = "paraEl"
+    quizEl.appendChild(paraEl);
+    var endButtonEl = document.createElement("button");
+    endButtonEl.textContent = "Try Again";
+    endButtonEl.className = "endButtonEl";
+    quizEl.appendChild(endButtonEl);
 }
 
 //add a clickHandler function that redirects all functions based on what was clicked
@@ -62,15 +78,17 @@ var clickHandler = function(event) {
         startQuiz();
     } else if (targetEl.textContent === correctResponse) {
         correctAnswer();
-    } else if (targetEl.textContent !== correctResponse) {
+    } else if (targetEl.className === ".listEl" && targetEl.textContent !== correctResponse) {
         incorrectAnswer();
     }
 };
 
-//add a startQuiz function that executes when the quiz button is clicked that clears the introObject items, starts the timer, and runs the formUpdate function
+//add a startQuiz function that executes when the quiz button is clicked that clears the introFormat items, starts the timer, and runs the formUpdate function
 var startQuiz = function() {
     var startButtonEl = document.querySelector(".startButtonEl");
+    var paraEl = document.querySelector(".startParaEl");
     startButtonEl.remove();
+    paraEl.remove();
     quizUpdate();
 };
 
@@ -117,17 +135,21 @@ var quizUpdate = function() {
         correctChoice();
         iterator();
     };
+    if (i === questions.length) {
+        endFormat();
+    };
 };
 
 //an ol is composed of li items, so create an li item and use array at index [j] to assign the text value of each li item
 var arrayToList = function(){
-    //reset listEl
-    listEl.innerHTML = "";
+    //reset orderedListEl
+    orderedListEl.innerHTML = "";
     //for the length of the choices array of the question in the questions array at the index of the loop being run, create an li element and assign it to the ol element
     for (j = 0; j < questions[i].choices.length; j++) {
         var item = document.createElement("li");
         item.textContent = questions[i].choices[j];
-        listEl.appendChild(item);
+        item.className = ".listEl";
+        orderedListEl.appendChild(item);
     };
 };
 
@@ -141,4 +163,4 @@ var correctChoice = function() {
 //add an event listener for the form to enable button functionality
 quizEl.addEventListener("click", clickHandler);
 
-introObject();
+introFormat();
