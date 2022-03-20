@@ -101,10 +101,25 @@ var endFormat = function() {
     orderedListEl.innerHTML = "";
     titleEl.textContent = "All Done!";
     paraEl.textContent = "Your final score is " + timeRemainingEl.textContent;
-    var endButtonEl = document.createElement("button");
-    endButtonEl.textContent = "Try Again";
-    endButtonEl.className = "endButtonEl";
-    quizEl.appendChild(endButtonEl);
+    //form
+    var scoreFormEl = document.createElement("form");
+    quizEl.appendChild(scoreFormEl);
+    var enterNameEl = document.createElement("input");
+    enterNameEl.type = "text";
+    enterNameEl.name = "user-name";
+    enterNameEl.placeholder = "Enter Your Name";
+    scoreFormEl.appendChild(enterNameEl);
+    //submit
+    var submitButtonEl = document.createElement("button");
+    submitButtonEl.type = "submit";
+    submitButtonEl.textContent = "Submit";
+    submitButtonEl.className = "submit"
+    quizEl.appendChild(submitButtonEl);
+    // //button
+    // var endButtonEl = document.createElement("button");
+    // endButtonEl.textContent = "Try Again";
+    // endButtonEl.className = "endButtonEl";
+    // quizEl.appendChild(endButtonEl);
 }
 
 //add a clickHandler function that redirects all functions based on what was clicked
@@ -116,6 +131,8 @@ var clickHandler = function(event) {
         correctAnswer();
     } else if (targetEl.className === ".listEl" && targetEl.textContent !== correctResponse) {
         incorrectAnswer();
+    } else if (targetEl.matches(".submit")) {
+        submitForm();
     } else if (targetEl.matches(".endButtonEl")) {
         restart();
     }
@@ -141,14 +158,14 @@ var startQuiz = function() {
 var correctAnswer = function() {
     paraEl.textContent = "correct!"
     setTimeout(quizUpdate, 500);
-}
+};
 
 //incorrect answer was selected
 var incorrectAnswer = function() {
     paraEl.textContent = "incorrect!"
     timer = timer-10;
     setTimeout(quizUpdate, 500);
-}
+};
 
 // //try again
 var restart = function() {
@@ -158,7 +175,22 @@ var restart = function() {
     i = 0;
     timeRemainingEl.textContent = timer;
     introFormat();
-}
+};
+
+//submit your high score
+var submitForm = function(event) {
+    var userNameInput = document.querySelector("input[name='user-name']").value;
+    var userScoreInput = timeRemainingEl.textContent;
+    if (!userNameInput) {
+        alert("You need to add your username!");
+        return false;
+    }
+    var highScoreObj = {
+        name: userNameInput,
+        score: userScoreInput
+    }
+    localStorage.setItem("scores", JSON.stringify(highScoreObj));
+};
 
 //update the quiz information
 var quizUpdate = function() {
