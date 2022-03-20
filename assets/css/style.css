@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+  }
+
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-remaining {
+    display: inline;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+}
+
+.quiz {
+    width: 50%;
+}
