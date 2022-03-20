@@ -109,6 +109,8 @@ var clickHandler = function(event) {
     } else if (targetEl.matches(".submit")) {
         submitForm();
         scoreBoardScreen();
+    } else if (targetEl.matches(".clearScoresButtonEl")) {
+        clearScores();
     };      
 };
 
@@ -166,6 +168,8 @@ var endFormat = function() {
 
 //restart game
 var restart = function() {
+    var clearScoresButtonEl = document.querySelector(".clearScoresButtonEl");
+    clearScoresButtonEl.remove();
     var endButtonEl = document.querySelector(".endButtonEl");
     endButtonEl.remove();
     orderedListEl.innerHTML = ""
@@ -173,25 +177,6 @@ var restart = function() {
     i = 0;
     timeRemainingEl.textContent = timer;
     introFormat();
-};
-
-//download
-var downloadScores = function() {
-    var savedScores = localStorage.getItem("scores");
-    if (!savedScores) {
-        scores = [];
-        return false;
-    } else {
-        scores = [];
-        savedScores = JSON.parse(savedScores);
-        for (j = 0; j < savedScores.length; j++) {
-            var savedScoreObj = {
-                name: savedScores[j].name,
-                score: savedScores[j].score
-            }
-            scores.push(savedScoreObj);
-        }
-    };
 };
 
 //submit
@@ -212,70 +197,52 @@ var submitForm = function() {
     }
 };
 
-// //submit your high score
-// var submitForm = function() {
-//     debugger;
-//     var userNameInput = document.querySelector("input[name='user-name']").value;
-//     var userScoreInput = timeRemainingEl.textContent;
-//     if (!userNameInput) {
-//         alert("You need to add a username!");
-//         return false;
-//     }
-//     var highScoreObj = {
-//         name: userNameInput,
-//         score: userScoreInput
-//     }
-//     scores.push(highScoreObj);
-//     localStorage.setItem("scores", JSON.stringify(scores));
-//     loadScores();
-// };
+//download scores
+var downloadScores = function() {
+    var savedScores = localStorage.getItem("scores");
+    if (!savedScores) {
+        scores = [];
+        return false;
+    } else {
+        scores = [];
+        savedScores = JSON.parse(savedScores);
+        for (j = 0; j < savedScores.length; j++) {
+            var savedScoreObj = {
+                name: savedScores[j].name,
+                score: savedScores[j].score
+            }
+            scores.push(savedScoreObj);
+        }
+    };
+};
 
-//load
+//load scores
 var loadScores = function() {
     titleEl.textContent = "Score Board";
     paraEl.textContent = ""
     for (j = 0; j < scores.length; j++) {
         var item = document.createElement("li");
         item.textContent = scores[j].name + " - " + scores[j].score;
+        item.className = "score-list"
         orderedListEl.appendChild(item);
     };
 };
 
-//upload
-var uploadScores = function () {
+//upload scores
+var uploadScores = function() {
     localStorage.setItem("scores", JSON.stringify(scores));
 };
 
-// //load high scores
-// var loadScores = function() {
-//     titleEl.textContent = "Score Board";
-//     paraEl.textContent = ""
-//     var savedScores = localStorage.getItem("scores");
-//     if (!savedScores) {
-//         scores = [];
-//         return false;
-//     }
-//     savedScores = JSON.parse(savedScores);
-//     for (j = 0; j < savedScores.length; j++) {
-//         var item = document.createElement("li");
-//         item.textContent = savedScores[j].name + " - " + savedScores[j].score;
-//         orderedListEl.appendChild(item);
-//     };
-// };
-
-// var pageScores = function() {
-//     var savedScores = localStorage.getItem("scores");
-//     if (!savedScores) {
-//         scores = [];
-//         return false;
-//     } else {
-//         scores = [];
-//         for (j = 0; j < savedScores.length; j++) {
-//             scores.push(savedScores);
-//             return;
-//         }
-//     };
-// };
+//clear scores
+var clearScores = function() {
+    for (j = 0; j < scores.length; j++) {
+        var scoreListEl = document.querySelector(".score-list");
+        scoreListEl.remove();
+    };
+    scores = [];
+    uploadScores();
+    restart();
+}
 
 //try again
 var scoreBoardScreen = function() {
@@ -291,6 +258,10 @@ var scoreBoardScreen = function() {
     endButtonEl.textContent = "Try Again";
     endButtonEl.className = "endButtonEl";
     quizEl.appendChild(endButtonEl);
+    var clearScoresButtonEl = document.createElement("button");
+    clearScoresButtonEl.textContent = "Clear Scores";
+    clearScoresButtonEl.className = "clearScoresButtonEl";
+    quizEl.appendChild(clearScoresButtonEl);
 };
 
 //update the quiz information
