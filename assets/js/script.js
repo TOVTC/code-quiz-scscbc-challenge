@@ -83,30 +83,18 @@ var viewScores = function() {
     savedScoresEl.textContent = "View Saved Scores";
     savedScoresEl.className = "viewSavedScores";
     headerEl.appendChild(savedScoresEl);
-}
-
-var clearHistory = function() {
-    var clearScoresButtonEl = document.createElement("button");
-    clearScoresButtonEl.textContent = "Clear Scores";
-    clearScoresButtonEl.className = "clearScoresButtonEl";
-    quizEl.appendChild(clearScoresButtonEl);
-}
+};
 
 //delete buttons
 var delViewScores = function() {
     var viewSavedScoresEl = document.querySelector(".viewSavedScores");
     viewSavedScoresEl.remove();
-}
+};
 
 var delStartBtn = function() {
     var startButtonEl = document.querySelector(".startButtonEl");
     startButtonEl.remove();
-}
-
-var delClearBtn = function () {
-    var clearScoresButtonEl = document.querySelector(".clearScoresButtonEl");
-    clearScoresButtonEl.remove();
-}
+};
 
 //set up for intro page
 var introFormat = function() {
@@ -118,7 +106,7 @@ var introFormat = function() {
     startButtonEl.textContent = "Start Quiz";
     startButtonEl.className = "startButtonEl";
     quizEl.appendChild(startButtonEl);
-}
+};
 
 //when the quiz button is clicked, clear the introFormat items, start the timer, and run the quizUpdate function
 var startQuiz = function() {
@@ -219,9 +207,6 @@ var viewSavedScores = function() {
     backButtonEl.textContent = "Back";
     backButtonEl.className = "backButtonEl";
     quizEl.appendChild(backButtonEl);
-    if (scores.length !== 0) {
-        clearHistory();
-    }
     //remove the view saved scores and start quiz button before loading scores
     delViewScores();
     delStartBtn();
@@ -272,10 +257,10 @@ var submitForm = function() {
 var restart = function() {
     //generate the view saved scores element again
     viewScores();
-    //delete the clear scores and try again button
-    delClearBtn();
     var endButtonEl = document.querySelector(".endButtonEl");
     endButtonEl.remove();
+    var clearScoresButtonEl = document.querySelector(".clearScoresButtonEl");
+    clearScoresButtonEl.remove();
     //reset all quiz elements and counters before running start function
     orderedListEl.innerHTML = ""
     timer = 60;
@@ -298,7 +283,10 @@ var scoreBoardScreen = function() {
     endButtonEl.textContent = "Try Again";
     endButtonEl.className = "endButtonEl";
     quizEl.appendChild(endButtonEl);
-    clearHistory();
+    var clearScoresButtonEl = document.createElement("button");
+    clearScoresButtonEl.textContent = "Clear Scores";
+    clearScoresButtonEl.className = "clearScoresButtonEl";
+    quizEl.appendChild(clearScoresButtonEl);
 };
 
 //back to home screen
@@ -308,9 +296,6 @@ var backButton = function () {
     //remove the back and clear score buttons
     var backButtonEl = document.querySelector(".backButtonEl");
     backButtonEl.remove();
-    if (scores.length !== 0) {
-        delClearBtn();
-    }
     //clear the list of saved scores on the screen
     if (!scores) {
         return false;
@@ -326,9 +311,6 @@ var backButton = function () {
 //clear scores
 var clearScores = function() {
     var clear = window.confirm("Are you sure you want to clear score history?");
-    if (!clear) {
-            return false;
-    } else {
         alert("Score history cleared!")
         //clear the list of saved scores on the screen
         for (j = 0; j < scores.length; j++) {
@@ -339,7 +321,6 @@ var clearScores = function() {
         scores = [];
         uploadScores();
         restart();
-    }
 };
 
 //upload scores
