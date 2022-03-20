@@ -52,33 +52,21 @@ bodyEl.appendChild(headerEl);
 bodyEl.appendChild(mainEl);
 
 //time remaining
-var timer = 10;
-var countdown = function() {
-    if (timer === 0) {
-        clearInterval(countdown);
-    };
-    timeRemainingEl.textContent = timer;
-    console.log(timer);
-    timer--;
-};
-
-//timer countdown
-var subtract = function() {
-    setInterval(countdown, 1000);
-};
-
-
-var timeRemainingEl = document.createElement("p");
-timeRemainingEl.textContent = timer;
-headerEl.appendChild(timeRemainingEl);
+var timer = 60;
 
 //header elements
 var highScoresEl = document.createElement("p");
 highScoresEl.textContent = "View High Scores";
 headerEl.appendChild(highScoresEl);
+//create small div for time remaining counter
+var timeDisplayEl = document.createElement("div");
+headerEl.appendChild(timeDisplayEl);
 var timerEl = document.createElement("p");
-timerEl.textContent = "Time Remaining: ";
+timeDisplayEl.textContent = "Time Remaining: ";
 headerEl.appendChild(timerEl);
+var timeRemainingEl = document.createElement("p");
+timeRemainingEl.textContent = timer;
+timeDisplayEl.appendChild(timeRemainingEl);
 
 //quiz div element
 var quizEl = document.createElement("div");
@@ -115,8 +103,8 @@ var introFormat = function() {
 //set up for end page
 var endFormat = function() {
     orderedListEl.innerHTML = "";
-    titleEl.textContent = "All Done!"
-    paraEl.textContent = "Your final score is __________"
+    titleEl.textContent = "All Done!";
+    paraEl.textContent = "Your final score is " + timeRemainingEl.textContent;
     var endButtonEl = document.createElement("button");
     endButtonEl.textContent = "Try Again";
     endButtonEl.className = "endButtonEl";
@@ -142,7 +130,15 @@ var startQuiz = function() {
     var startButtonEl = document.querySelector(".startButtonEl");
     startButtonEl.remove();
     quizUpdate();
-    subtract();
+    //timer countdown
+    var subtract = setInterval( function() {
+        timer--;
+        timeRemainingEl.textContent = timer;
+        if (timer === 0 || i === questions.length) {
+            clearInterval(subtract)
+            endFormat();}
+        }, 1000
+    );
 };
 
 //correct answer was selected
@@ -154,6 +150,7 @@ var correctAnswer = function() {
 //incorrect answer was selected
 var incorrectAnswer = function() {
     paraEl.textContent = "incorrect!"
+    timer = timer-10;
     setTimeout(quizUpdate, 500);
 }
 
@@ -161,6 +158,7 @@ var incorrectAnswer = function() {
 var restart = function() {
     var endButtonEl = document.querySelector(".endButtonEl");
     endButtonEl.remove();
+    timer = 60;
     i = 0;
     introFormat();
 }
