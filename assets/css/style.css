@@ -1,10 +1,22 @@
-/*font family needs to be set
-/*the multiple choice answers need padding and a rounded corner
-/*header elements need to be inline
-/*elements within the quiz form can be block, but the form itself needs to be 40%? of the width and flexbox center justify*/
+* {
+    box-sizing: border-box;
+  }
 
-/*.style-test {
-display: flex;
-width: 100px;
-background-color: purple;
-} UNCOMMENT FOR ORIGINAL TEST CODE*/
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.time-remaining {
+    display: inline;
+}
+
+.main {
+    display: flex;
+    justify-content: center;
+}
+
+.quiz {
+    width: 50%;
+}

@@ -1,4 +1,4 @@
-//add questions to an array
+//questions array
 var questions = [{
     question: "Commonly used data types do NOT include:",
     choices: ["Strings", "Booleans", "Alerts", "Numbers"],
@@ -21,38 +21,17 @@ var questions = [{
     correct: "console.log"
 }];
 
-// UNCOMMENT FOR ORIGINAL TEST CODE
-// var testEl = document.querySelector("#test");
-// var mainEl = document.querySelector("#main");
-// var testEvent = function() {
-//     window.alert("this is a test!");
-// }
-// testEl.addEventListener("click", testEvent);
-
-// var secondTestElContainer = document.createElement("div")
-// secondTestElContainer.className = "style-test"
-// var secondTestEl = document.createElement("p");
-// secondTestEl.textContent = "testing";
-// secondTestElContainer.appendChild(secondTestEl);
-// mainEl.appendChild(secondTestElContainer);
-
-//add class values to all dynamically created html elements in order to be styled
-
-//link HTML elements
-var bodyEl = document.querySelector("#body");
+//link main HTML elements
 var headerEl = document.querySelector("#header");
-var mainEl = document.querySelector("#main");
+var timeDisplayEl = document.querySelector("#time-display")
+var quizEl = document.querySelector("#quiz")
 
 //time remaining
 var timer = 60;
 
-//create small div for time remaining counter
-var timeDisplayEl = document.createElement("div");
-headerEl.appendChild(timeDisplayEl);
-var timerEl = document.createElement("p");
-timeDisplayEl.textContent = "Time Remaining: ";
-headerEl.appendChild(timerEl);
+//create time remaining counter
 var timeRemainingEl = document.createElement("p");
+timeRemainingEl.className = "time-remaining"
 timeRemainingEl.textContent = timer;
 timeDisplayEl.appendChild(timeRemainingEl);
 
@@ -62,17 +41,12 @@ highScoresEl.textContent = "View High Scores";
 highScoresEl.className = "viewHighScores";
 headerEl.appendChild(highScoresEl);
 
-//quiz div element
-var quizEl = document.createElement("div");
-mainEl.appendChild(quizEl);
-
 //initial quiz format set up
-var titleEl = document.createElement("h1");
+var titleEl = document.querySelector("#quiz-title")
 var orderedListEl = document.createElement("ol");
-var paraEl = document.createElement("p");
 orderedListEl.className = "orderedListEl";
-quizEl.appendChild(titleEl);
 quizEl.appendChild(orderedListEl);
+var paraEl = document.createElement("p");
 quizEl.appendChild(paraEl);
 
 //question counter
@@ -139,13 +113,13 @@ var startQuiz = function() {
 
 //correct answer was selected
 var correctAnswer = function() {
-    paraEl.textContent = "correct!"
+    paraEl.textContent = "Correct!"
     setTimeout(quizUpdate, 500);
 };
 
 //incorrect answer was selected
 var incorrectAnswer = function() {
-    paraEl.textContent = "incorrect!"
+    paraEl.textContent = "Incorrect!"
     timer = timer-10;
     setTimeout(quizUpdate, 500);
 };
@@ -251,6 +225,7 @@ var uploadScores = function() {
 
 //clear scores
 var clearScores = function() {
+    alert("Score History Cleared!")
     for (j = 0; j < scores.length; j++) {
         var scoreListEl = document.querySelector(".score-list");
         scoreListEl.remove();
