@@ -1,3 +1,26 @@
+//add questions to an array
+var questions = [{
+    question: "Commonly used data types do NOT include:",
+    choices: ["Strings", "Booleans", "Alerts", "Numbers"],
+    correct: "Alerts"
+}, {
+    question: "The condition in an if/else statement is enclosed in:",
+    choices: ["Quotes", "Parentheses", "Curly Brackets", "Square Brackets"],
+    correct: "Parentheses"
+}, {
+    question: "Arrays in JavaScript can be used to store",
+    choices: ["Numbers and Strings", "Other Arrays", "Booleans", "All of the Above"],
+    correct: "All of the Above"
+}, {
+    question: "String values must be enclosed within __________ when being assigned to variables",
+    choices: ["Commas", "Curly Brackets", "Quotes", "Parentheses"],
+    correct: "Quotes"
+}, {
+    question: "A very useful tool used during development and debugging for printing content to the debugger is:",
+    choices: ["JavaScript", "Terminal Bash", "for loops", "console.log"],
+    correct: "console.log"
+}];
+
 // UNCOMMENT FOR ORIGINAL TEST CODE
 // var testEl = document.querySelector("#test");
 // var mainEl = document.querySelector("#main");
@@ -31,9 +54,11 @@ mainEl.appendChild(quizEl);
 //initial quiz format set up
 var titleEl = document.createElement("h1");
 var orderedListEl = document.createElement("ol");
+var paraEl = document.createElement("p");
 orderedListEl.className = "orderedListEl";
 quizEl.appendChild(titleEl);
 quizEl.appendChild(orderedListEl);
+quizEl.appendChild(paraEl);
 
 //question counter
 var i = 0;
@@ -41,33 +66,28 @@ var iterator = function() {
     i = i+1;
 };
 
-//correct answer
+//correct answer tracker
 correctResponse = ""
 
 //set up for intro page
 var introFormat = function() {
     titleEl.textContent = "Coding Quiz Challenge"
-    var startParaEl = document.createElement("p");
-    startParaEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!"
-    startParaEl.className = "startParaEl"
-    quizEl.appendChild(startParaEl);
+    paraEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!"
     var startButtonEl = document.createElement("button");
     startButtonEl.textContent = "Start Quiz";
     startButtonEl.className = "startButtonEl";
     quizEl.appendChild(startButtonEl);
 }
 
+//set up for end page
 var endFormat = function() {
     var orderedListEl = document.querySelector(".orderedListEl");
     orderedListEl.remove();
     titleEl.textContent = "All Done!"
-    var paraEl = document.createElement("p");
     paraEl.textContent = "Your final score is __________"
-    paraEl.className = "paraEl"
-    quizEl.appendChild(paraEl);
     var endButtonEl = document.createElement("button");
     endButtonEl.textContent = "Try Again";
-    endButtonEl.className = "endButtonEl";
+    endButtonEl.className = ".endButtonEl";
     quizEl.appendChild(endButtonEl);
 }
 
@@ -80,57 +100,43 @@ var clickHandler = function(event) {
         correctAnswer();
     } else if (targetEl.className === ".listEl" && targetEl.textContent !== correctResponse) {
         incorrectAnswer();
+    } else if (targetEl.matches(".endButtonEl")) {
+        restart();
     }
 };
 
 //add a startQuiz function that executes when the quiz button is clicked that clears the introFormat items, starts the timer, and runs the formUpdate function
 var startQuiz = function() {
     var startButtonEl = document.querySelector(".startButtonEl");
-    var paraEl = document.querySelector(".startParaEl");
     startButtonEl.remove();
-    paraEl.remove();
     quizUpdate();
 };
 
 //correct answer was selected
 var correctAnswer = function() {
-    console.log("correct!")
-    quizUpdate();
+    paraEl.textContent = "correct!"
+    setTimeout(quizUpdate, 1000);
 }
 
 //incorrect answer was selected
 var incorrectAnswer = function() {
-    console.log("incorrect!")
-    quizUpdate();
+    paraEl.textContent = "incorrect!"
+    setTimeout(quizUpdate, 1000);
 }
 
-//add questions to an array
-var questions = [{
-    question: "Commonly used data types do NOT include:",
-    choices: ["Strings", "Booleans", "Alerts", "Numbers"],
-    correct: "Alerts"
-}, {
-    question: "The condition in an if/else statement is enclosed in:",
-    choices: ["Quotes", "Parentheses", "Curly Brackets", "Square Brackets"],
-    correct: "Parentheses"
-}, {
-    question: "Arrays in JavaScript can be used to store",
-    choices: ["Numbers and Strings", "Other Arrays", "Booleans", "All of the Above"],
-    correct: "All of the Above"
-}, {
-    question: "String values must be enclosed within __________ when being assigned to variables",
-    choices: ["Commas", "Curly Brackets", "Quotes", "Parentheses"],
-    correct: "Quotes"
-}, {
-    question: "A very useful tool used during development and debugging for printing content to the debugger is:",
-    choices: ["JavaScript", "Terminal Bash", "for loops", "console.log"],
-    correct: "console.log"
-}];
+// //try again
+var restart = function() {
+    var endButtonEl = document.querySelector(".endButtonEl");
+    endButtonEl.remove();
+    i = 0;
+    startQuiz();
+}
 
 //update the quiz information
 var quizUpdate = function() {
     if (i < questions.length) {
         titleEl.textContent = questions[i].question;
+        paraEl.textContent = "";
         arrayToList();
         correctChoice();
         iterator();
