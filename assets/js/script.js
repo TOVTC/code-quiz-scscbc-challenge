@@ -36,16 +36,12 @@ var questions = [{
 // secondTestElContainer.appendChild(secondTestEl);
 // mainEl.appendChild(secondTestElContainer);
 
-//when time runs out, a form field needs to be generated and that data stored in localStorage
-//view high scores button in header should have an on click event listener
 //add class values to all dynamically created html elements in order to be styled
 
 //link HTML elements
 var bodyEl = document.querySelector("#body");
 var headerEl = document.querySelector("#header");
 var mainEl = document.querySelector("#main");
-bodyEl.appendChild(headerEl);
-bodyEl.appendChild(mainEl);
 
 //time remaining
 var timer = 60;
@@ -99,32 +95,6 @@ var introFormat = function() {
     quizEl.appendChild(startButtonEl);
 }
 
-//set up for end page
-var endFormat = function() {
-    orderedListEl.innerHTML = "";
-    titleEl.textContent = "All Done!";
-    paraEl.textContent = "Your final score is " + timeRemainingEl.textContent;
-    //form
-    var scoreFormEl = document.createElement("form");
-    quizEl.appendChild(scoreFormEl);
-    var enterNameEl = document.createElement("input");
-    enterNameEl.type = "text";
-    enterNameEl.name = "user-name";
-    enterNameEl.placeholder = "Enter Your Name";
-    scoreFormEl.appendChild(enterNameEl);
-    //submit
-    var submitButtonEl = document.createElement("button");
-    submitButtonEl.type = "submit";
-    submitButtonEl.textContent = "Submit";
-    submitButtonEl.className = "submit"
-    quizEl.appendChild(submitButtonEl);
-    //button
-    var endButtonEl = document.createElement("button");
-    endButtonEl.textContent = "Try Again";
-    endButtonEl.className = "endButtonEl";
-    quizEl.appendChild(endButtonEl);
-}
-
 //add a clickHandler function that redirects all functions based on what was clicked
 var clickHandler = function(event) {
     var targetEl = event.target;
@@ -134,14 +104,15 @@ var clickHandler = function(event) {
         correctAnswer();
     } else if (targetEl.className === ".listEl" && targetEl.textContent !== correctResponse) {
         incorrectAnswer();
-    } else if (targetEl.matches(".submit")) {
-        submitForm();
     } else if (targetEl.matches(".endButtonEl")) {
         restart();
-    }
+    } else if (targetEl.matches(".submit")) {
+        submitForm();
+        scoreBoardScreen();
+    };      
 };
 
-//add a startQuiz function that executes when the quiz button is clicked that clears the introFormat items, starts the timer, and runs the formUpdate function
+//when the quiz button is clicked, clears the introFormat items, starts the timer, and runs the quizUpdate function
 var startQuiz = function() {
     var startButtonEl = document.querySelector(".startButtonEl");
     startButtonEl.remove();
@@ -170,48 +141,157 @@ var incorrectAnswer = function() {
     setTimeout(quizUpdate, 500);
 };
 
-// //try again
+//set up for end page
+var endFormat = function() {
+    orderedListEl.innerHTML = "";
+    titleEl.textContent = "All Done!";
+    paraEl.textContent = "Your final score is " + timeRemainingEl.textContent;
+    //form
+    var scoreFormEl = document.createElement("form");
+    scoreFormEl.className = "scoreFormEl";
+    quizEl.appendChild(scoreFormEl);
+    var enterNameEl = document.createElement("input");
+    enterNameEl.type = "text";
+    enterNameEl.name = "user-name";
+    enterNameEl.placeholder = "Enter Your Name";
+    enterNameEl.className = "enterNameEl"
+    scoreFormEl.appendChild(enterNameEl);
+    //submit
+    var submitButtonEl = document.createElement("button");
+    submitButtonEl.type = "submit";
+    submitButtonEl.textContent = "Submit";
+    submitButtonEl.className = "submit"
+    quizEl.appendChild(submitButtonEl);
+}
+
+//restart game
 var restart = function() {
     var endButtonEl = document.querySelector(".endButtonEl");
     endButtonEl.remove();
+    orderedListEl.innerHTML = ""
     timer = 60;
     i = 0;
     timeRemainingEl.textContent = timer;
     introFormat();
 };
 
-//submit your high score
-var submitForm = function(event) {
+//download
+var downloadScores = function() {
+    var savedScores = localStorage.getItem("scores");
+    if (!savedScores) {
+        scores = [];
+        return false;
+    } else {
+        scores = [];
+        savedScores = JSON.parse(savedScores);
+        for (j = 0; j < savedScores.length; j++) {
+            var savedScoreObj = {
+                name: savedScores[j].name,
+                score: savedScores[j].score
+            }
+            scores.push(savedScoreObj);
+        }
+    };
+};
+
+//submit
+var submitForm = function() {
     var userNameInput = document.querySelector("input[name='user-name']").value;
     var userScoreInput = timeRemainingEl.textContent;
     if (!userNameInput) {
         alert("You need to add a username!");
         return false;
+    } else {
+        var highScoreObj = {
+            name: userNameInput,
+            score: userScoreInput
+        }
+        scores.push(highScoreObj);
+        uploadScores();
+        loadScores();
     }
-    var highScoreObj = {
-        name: userNameInput,
-        score: userScoreInput
-    }
-    scores.push(highScoreObj);
-    localStorage.setItem("scores", JSON.stringify(scores));
 };
 
-//load high scores
+// //submit your high score
+// var submitForm = function() {
+//     debugger;
+//     var userNameInput = document.querySelector("input[name='user-name']").value;
+//     var userScoreInput = timeRemainingEl.textContent;
+//     if (!userNameInput) {
+//         alert("You need to add a username!");
+//         return false;
+//     }
+//     var highScoreObj = {
+//         name: userNameInput,
+//         score: userScoreInput
+//     }
+//     scores.push(highScoreObj);
+//     localStorage.setItem("scores", JSON.stringify(scores));
+//     loadScores();
+// };
+
+//load
 var loadScores = function() {
-    var savedScores = localStorage.getItem("scores");
-    if (!savedScores) {
-        scores = [];
-        return false;
-    }
-    savedScores = JSON.parse(savedScores);
-    for (j = 0; j < savedScores.length; j++) {
+    titleEl.textContent = "Score Board";
+    paraEl.textContent = ""
+    for (j = 0; j < scores.length; j++) {
         var item = document.createElement("li");
-        item.textContent = savedScores[j].name + " - " + savedScores[j].score;
+        item.textContent = scores[j].name + " - " + scores[j].score;
         orderedListEl.appendChild(item);
     };
 };
 
-//maybe set the data-score-value of the score so you can add it or remove it from the array?
+//upload
+var uploadScores = function () {
+    localStorage.setItem("scores", JSON.stringify(scores));
+};
+
+// //load high scores
+// var loadScores = function() {
+//     titleEl.textContent = "Score Board";
+//     paraEl.textContent = ""
+//     var savedScores = localStorage.getItem("scores");
+//     if (!savedScores) {
+//         scores = [];
+//         return false;
+//     }
+//     savedScores = JSON.parse(savedScores);
+//     for (j = 0; j < savedScores.length; j++) {
+//         var item = document.createElement("li");
+//         item.textContent = savedScores[j].name + " - " + savedScores[j].score;
+//         orderedListEl.appendChild(item);
+//     };
+// };
+
+// var pageScores = function() {
+//     var savedScores = localStorage.getItem("scores");
+//     if (!savedScores) {
+//         scores = [];
+//         return false;
+//     } else {
+//         scores = [];
+//         for (j = 0; j < savedScores.length; j++) {
+//             scores.push(savedScores);
+//             return;
+//         }
+//     };
+// };
+
+//try again
+var scoreBoardScreen = function() {
+    //remove submit form elements
+    var enterNameEl = document.querySelector(".enterNameEl");
+    enterNameEl.remove();
+    var formEl = document.querySelector(".scoreFormEl");
+    formEl.remove();
+    var submitButtonEl = document.querySelector(".submit");
+    submitButtonEl.remove();
+    //create new buttons
+    var endButtonEl = document.createElement("button");
+    endButtonEl.textContent = "Try Again";
+    endButtonEl.className = "endButtonEl";
+    quizEl.appendChild(endButtonEl);
+};
 
 //update the quiz information
 var quizUpdate = function() {
@@ -249,4 +329,11 @@ var correctChoice = function() {
 //add an event listener for the form to enable button functionality
 quizEl.addEventListener("click", clickHandler);
 
+//add event listener for form submit
+quizEl.addEventListener("submit", submitForm);
+
+//add an event listener for the form to enable button functionality
+highScoresEl.addEventListener("click", loadScores);
+
+downloadScores();
 introFormat();
