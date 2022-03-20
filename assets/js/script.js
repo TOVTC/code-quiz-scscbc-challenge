@@ -31,68 +31,128 @@
 //add a landing page that has a button that triggers the setTimeout
 //add class values to all dynamically created html elements in order to be styled
 
-//link HTML elements first
+//link HTML elements
 var mainEl = document.querySelector("#main");
 
 //main div elements
-var formEl = document.createElement("div");
-mainEl.appendChild(formEl);
+var quizEl = document.createElement("div");
+mainEl.appendChild(quizEl);
 
 //initial quiz format set up
 var titleEl = document.createElement("h1");
-var paraEl = document.createElement("p");
 var listEl = document.createElement("ol");
-//start quiz button
-var introButtonEl = document.createElement("button");
-introButtonEl.textContent = "Start Quiz";
-formEl.appendChild(titleEl);
-formEl.appendChild(paraEl);
-formEl.appendChild(introButtonEl);
-formEl.appendChild(listEl);
+quizEl.appendChild(titleEl);
+quizEl.appendChild(listEl);
 
-//turn questions into objects
-var qOne = {
+//set up for intro page
+var introObject = function() {
+    titleEl.textContent = "Coding Quiz Challenge"
+    var paraEl = document.createElement("p");
+    paraEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!"
+    quizEl.appendChild(paraEl);
+    var introButtonEl = document.createElement("button");
+    introButtonEl.textContent = "Start Quiz";
+    quizEl.appendChild(introButtonEl);
+}
+
+// //turn questions into objects
+// var qOne = {
+//     question: "Commonly used data types do NOT include:",
+//     choices: ["Strings", "Booleans", "Alerts", "Numbers"],
+//     correct: "" //Alerts
+// }
+// var qTwo = {
+//     question: "The condition in an if/else statement is enclosed in:",
+//     choices: ["Quotes", "Parentheses", "Curly Brackets", "Square Brackets"],
+//     correct: "" //Parentheses
+// }
+// var qThree = {
+//     question: "Arrays in JavaScript can be used to store",
+//     choices: ["Numbers and Strings", "Other Arrays", "Booleans", "All of the Above"],
+//     correct: "" //All of the Above
+// }
+// var qFour = {
+//     question: "String values must be enclosed within __________ when being assigned to variables",
+//     choices: ["Commas", "Curly Brackets", "Quotes", "Parentheses"],
+//     correct: "" //Quotes
+// }
+// var qFive = {
+//     question: "A very useful tool used during development and debugging for printing content to the debugger is:",
+//     choices: ["JavaScript", "Terminal Bash", "for loops", "console.log"],
+//     correct: "" //console.log
+// }
+
+
+
+//add a startQuiz function that executes when the quiz button is clicked that clears the introObject items, starts the timer, and runs the formUpdate function
+
+//add questions to an array
+var questions = [{
     question: "Commonly used data types do NOT include:",
     choices: ["Strings", "Booleans", "Alerts", "Numbers"],
     correct: "" //Alerts
-}
-var qTwo = {
+}, {
     question: "The condition in an if/else statement is enclosed in:",
     choices: ["Quotes", "Parentheses", "Curly Brackets", "Square Brackets"],
     correct: "" //Parentheses
-}
-var qThree = {
+}, {
     question: "Arrays in JavaScript can be used to store",
     choices: ["Numbers and Strings", "Other Arrays", "Booleans", "All of the Above"],
     correct: "" //All of the Above
-}
-var qFour = {
+}, {
     question: "String values must be enclosed within __________ when being assigned to variables",
     choices: ["Commas", "Curly Brackets", "Quotes", "Parentheses"],
     correct: "" //Quotes
-}
-var qFive = {
+}, {
     question: "A very useful tool used during development and debugging for printing content to the debugger is:",
     choices: ["JavaScript", "Terminal Bash", "for loops", "console.log"],
     correct: "" //console.log
-}
-//add question objects to an array
-var questions = [qOne, qTwo, qThree, qFour, qFive]
+}]
 
-var formUpdate = function() {
-    //add code here to remove the button
-    for (i = 0; i < questions.length; i++) {
-        titleEl.textContent = questions[i].question;
-        //a ul is composed of li items, so create an li item and use array at index [i] to assign the text value of each li item
-        //for the length of the choices array of the question in the questions array at the index of the iterative loop being run, create an li element and assign it to the ol element
-        for (j = 0; j < questions[i].choices.length; j++) {
+// //update update the information
+// var quizUpdate = function() {
+//     for (i = 0; i < questions.length; i++) {
+//         //reset listEl
+//         listEl.innerHTML = "";
+//         titleEl.textContent = questions[i].question;
+//         //a ul is composed of li items, so create an li item and use array at index [j] to assign the text value of each li item
+//         //for the length of the choices array of the question in the questions array at the index of the loop being run, create an li element and assign it to the ol element
+//         for (j = 0; j < questions[i].choices.length; j++) {
+//             var item = document.createElement("li");
+//             item.textContent = questions[i].choices[j];
+//             listEl.appendChild(item);
+//         }
+//         return;
+//     }
+// }
+
+
+var i = 0;
+var iterator = function() {
+    i = i+1
+    console.log(i);
+}
+
+//update the quiz information
+var quizUpdate = function() {
+    titleEl.textContent = questions[i].question;
+    arrayToList();
+    iterator();
+}
+
+//a ul is composed of li items, so create an li item and use array at index [j] to assign the text value of each li item
+//for the length of the choices array of the question in the questions array at the index of the loop being run, create an li element and assign it to the ol element
+var arrayToList = function(){
+    //reset listEl
+    listEl.innerHTML = "";
+    for (j = 0; j < questions[i].choices.length; j++) {
         var item = document.createElement("li");
         item.textContent = questions[i].choices[j];
         listEl.appendChild(item);
-        }
-        return;
     }
 }
 
+//add an event listener for the form to enable button functionality
+quizEl.addEventListener("click", quizUpdate);
 
-formUpdate();
+introObject();
