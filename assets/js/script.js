@@ -46,10 +46,6 @@ var mainEl = document.querySelector("#main");
 //time remaining
 var timer = 60;
 
-//header elements
-var highScoresEl = document.createElement("p");
-highScoresEl.textContent = "View High Scores";
-headerEl.appendChild(highScoresEl);
 //create small div for time remaining counter
 var timeDisplayEl = document.createElement("div");
 headerEl.appendChild(timeDisplayEl);
@@ -59,6 +55,12 @@ headerEl.appendChild(timerEl);
 var timeRemainingEl = document.createElement("p");
 timeRemainingEl.textContent = timer;
 timeDisplayEl.appendChild(timeRemainingEl);
+
+//high scores button
+var highScoresEl = document.createElement("p");
+highScoresEl.textContent = "View High Scores";
+highScoresEl.className = "viewHighScores";
+headerEl.appendChild(highScoresEl);
 
 //quiz div element
 var quizEl = document.createElement("div");
@@ -108,16 +110,21 @@ var clickHandler = function(event) {
         restart();
     } else if (targetEl.matches(".submit")) {
         submitForm();
-        scoreBoardScreen();
     } else if (targetEl.matches(".clearScoresButtonEl")) {
         clearScores();
-    };      
+    } else if (targetEl.matches(".backButtonEl")) {
+        backButton();
+    } else if (targetEl.matches(".viewHighScores")) {
+        viewHighScores();
+    };
 };
 
 //when the quiz button is clicked, clears the introFormat items, starts the timer, and runs the quizUpdate function
 var startQuiz = function() {
     var startButtonEl = document.querySelector(".startButtonEl");
     startButtonEl.remove();
+    var viewHighScoresEl = document.querySelector(".viewHighScores");
+    viewHighScoresEl.remove();
     quizUpdate();
     //timer countdown
     var subtract = setInterval( function() {
@@ -168,6 +175,10 @@ var endFormat = function() {
 
 //restart game
 var restart = function() {
+    var highScoresEl = document.createElement("p");
+    highScoresEl.textContent = "View High Scores";
+    highScoresEl.className = "viewHighScores";
+    headerEl.appendChild(highScoresEl);
     var clearScoresButtonEl = document.querySelector(".clearScoresButtonEl");
     clearScoresButtonEl.remove();
     var endButtonEl = document.querySelector(".endButtonEl");
@@ -194,6 +205,7 @@ var submitForm = function() {
         scores.push(highScoreObj);
         uploadScores();
         loadScores();
+        scoreBoardScreen();
     }
 };
 
@@ -220,12 +232,16 @@ var downloadScores = function() {
 var loadScores = function() {
     titleEl.textContent = "Score Board";
     paraEl.textContent = ""
-    for (j = 0; j < scores.length; j++) {
-        var item = document.createElement("li");
-        item.textContent = scores[j].name + " - " + scores[j].score;
-        item.className = "score-list"
-        orderedListEl.appendChild(item);
-    };
+    if (scores.length === 0) {
+        paraEl.textContent = "No scores saved yet!"
+    } else {
+        for (j = 0; j < scores.length; j++) {
+            var item = document.createElement("li");
+            item.textContent = scores[j].name + " - " + scores[j].score;
+            item.className = "score-list"
+            orderedListEl.appendChild(item);
+        };
+    }
 };
 
 //upload scores
@@ -263,6 +279,37 @@ var scoreBoardScreen = function() {
     clearScoresButtonEl.className = "clearScoresButtonEl";
     quizEl.appendChild(clearScoresButtonEl);
 };
+
+//load high scores page
+var viewHighScores = function() {
+    var backButtonEl = document.createElement("button");
+    backButtonEl.textContent = "Back";
+    backButtonEl.className = "backButtonEl";
+    quizEl.appendChild(backButtonEl);
+    var viewHighScoresEl = document.querySelector(".viewHighScores");
+    viewHighScoresEl.remove();
+    var startButtonEl = document.querySelector(".startButtonEl");
+    startButtonEl.remove();
+    loadScores();
+}
+
+var backButton = function () {
+    var highScoresEl = document.createElement("p");
+    highScoresEl.textContent = "View High Scores";
+    highScoresEl.className = "viewHighScores";
+    headerEl.appendChild(highScoresEl);
+    var backButtonEl = document.querySelector(".backButtonEl");
+    backButtonEl.remove();
+    if (!scores) {
+        return false;
+    } else {
+        for (j = 0; j < scores.length; j++) {
+        var scoreListEl = document.querySelector(".score-list");
+        scoreListEl.remove();
+        }
+    };
+    introFormat();
+}
 
 //update the quiz information
 var quizUpdate = function() {
@@ -304,7 +351,7 @@ quizEl.addEventListener("click", clickHandler);
 quizEl.addEventListener("submit", submitForm);
 
 //add an event listener for the form to enable button functionality
-highScoresEl.addEventListener("click", loadScores);
+headerEl.addEventListener("click", clickHandler);
 
 downloadScores();
 introFormat();
