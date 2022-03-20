@@ -45,9 +45,42 @@ var questions = [{
 //add class values to all dynamically created html elements in order to be styled
 
 //link HTML elements
+var bodyEl = document.querySelector("#body");
+var headerEl = document.querySelector("#header");
 var mainEl = document.querySelector("#main");
+bodyEl.appendChild(headerEl);
+bodyEl.appendChild(mainEl);
 
-//main div elements
+//time remaining
+var timer = 10;
+var countdown = function() {
+    if (timer === 0) {
+        clearInterval(countdown);
+    };
+    timeRemainingEl.textContent = timer;
+    console.log(timer);
+    timer--;
+};
+
+//timer countdown
+var subtract = function() {
+    setInterval(countdown, 1000);
+};
+
+
+var timeRemainingEl = document.createElement("p");
+timeRemainingEl.textContent = timer;
+headerEl.appendChild(timeRemainingEl);
+
+//header elements
+var highScoresEl = document.createElement("p");
+highScoresEl.textContent = "View High Scores";
+headerEl.appendChild(highScoresEl);
+var timerEl = document.createElement("p");
+timerEl.textContent = "Time Remaining: ";
+headerEl.appendChild(timerEl);
+
+//quiz div element
 var quizEl = document.createElement("div");
 mainEl.appendChild(quizEl);
 
@@ -81,13 +114,12 @@ var introFormat = function() {
 
 //set up for end page
 var endFormat = function() {
-    var orderedListEl = document.querySelector(".orderedListEl");
-    orderedListEl.remove();
+    orderedListEl.innerHTML = "";
     titleEl.textContent = "All Done!"
     paraEl.textContent = "Your final score is __________"
     var endButtonEl = document.createElement("button");
     endButtonEl.textContent = "Try Again";
-    endButtonEl.className = ".endButtonEl";
+    endButtonEl.className = "endButtonEl";
     quizEl.appendChild(endButtonEl);
 }
 
@@ -110,18 +142,19 @@ var startQuiz = function() {
     var startButtonEl = document.querySelector(".startButtonEl");
     startButtonEl.remove();
     quizUpdate();
+    subtract();
 };
 
 //correct answer was selected
 var correctAnswer = function() {
     paraEl.textContent = "correct!"
-    setTimeout(quizUpdate, 1000);
+    setTimeout(quizUpdate, 500);
 }
 
 //incorrect answer was selected
 var incorrectAnswer = function() {
     paraEl.textContent = "incorrect!"
-    setTimeout(quizUpdate, 1000);
+    setTimeout(quizUpdate, 500);
 }
 
 // //try again
@@ -129,7 +162,7 @@ var restart = function() {
     var endButtonEl = document.querySelector(".endButtonEl");
     endButtonEl.remove();
     i = 0;
-    startQuiz();
+    introFormat();
 }
 
 //update the quiz information
@@ -140,17 +173,16 @@ var quizUpdate = function() {
         arrayToList();
         correctChoice();
         iterator();
-    };
-    if (i === questions.length) {
+    } else if (i === questions.length) {
         endFormat();
     };
 };
 
-//an ol is composed of li items, so create an li item and use array at index [j] to assign the text value of each li item
+//an ol is composed of li items, so create an li item and use array at index j to assign the text value of each li item
 var arrayToList = function(){
     //reset orderedListEl
     orderedListEl.innerHTML = "";
-    //for the length of the choices array of the question in the questions array at the index of the loop being run, create an li element and assign it to the ol element
+    //for the length of the choices array of the question in the questions array at the current value of i, create an li element and assign it to the ol element
     for (j = 0; j < questions[i].choices.length; j++) {
         var item = document.createElement("li");
         item.textContent = questions[i].choices[j];
