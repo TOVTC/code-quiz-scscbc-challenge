@@ -1,22 +1,64 @@
+/*universal selectors*/
 * {
     box-sizing: border-box;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
   }
 
-.header {
+header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin: 25px;
+    min-height: 75px;
+}
+
+main {
+    display: flex;
+    justify-content: center;
+}
+
+h1 {
+    min-height: 75px;
+    display: flex;
+    align-items: flex-end;
+}
+
+/*specifics*/
+.quiz {
+    min-height: 300px;
+    width: 50%;
+    
 }
 
 .time-remaining {
     display: inline;
 }
 
-.main {
-    display: flex;
-    justify-content: center;
+div ol li {
+    padding: 5px;
 }
 
-.quiz {
-    width: 50%;
+button {
+    background: rgb(2, 112, 146);
+    color: rgb(255, 255, 255);
+    padding: 5px 10px;
+    border-radius: 15%;
+    margin: 10px;
+}
+
+.scoreFormEl {
+    margin: 10px;
+}
+
+.viewSavedScores {
+    color: rgb(0, 169, 199);
+}
+
+/*interactivity*/
+div ol li:hover {
+    color: rgb(0, 169, 199);
+}
+
+.viewSavedScores:hover {
+    color: rgb(0, 106, 192);
 }
