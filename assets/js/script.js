@@ -23,8 +23,8 @@ var questions = [{
 
 //link main HTML elements
 var headerEl = document.querySelector("#header");
-var timeDisplayEl = document.querySelector("#time-display")
-var quizEl = document.querySelector("#quiz")
+var timeDisplayEl = document.querySelector("#time-display");
+var quizEl = document.querySelector("#quiz");
 
 //time remaining
 var timer = 60;
@@ -36,7 +36,7 @@ timeRemainingEl.textContent = timer;
 timeDisplayEl.appendChild(timeRemainingEl);
 
 //initial quiz format set up
-var titleEl = document.querySelector("#quiz-title")
+var titleEl = document.querySelector("#quiz-title");
 var orderedListEl = document.createElement("ol");
 orderedListEl.className = "orderedListEl";
 quizEl.appendChild(orderedListEl);
@@ -50,7 +50,7 @@ var iterator = function() {
 };
 
 //correct answer tracker
-correctResponse = ""
+correctResponse = "";
 
 //saved scores array
 var scores = [];
@@ -99,8 +99,8 @@ var delStartBtn = function() {
 //set up for intro page
 var introFormat = function() {
     //title and text
-    titleEl.textContent = "Coding Quiz Challenge"
-    paraEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!"
+    titleEl.textContent = "Coding Quiz Challenge";
+    paraEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!";
     //generate start button
     var startButtonEl = document.createElement("button");
     startButtonEl.textContent = "Start Quiz";
@@ -123,7 +123,7 @@ var startQuiz = function() {
             if (timer < 0) {
                 timeRemainingEl.textContent = 0;
             }
-            clearInterval(subtract)
+            clearInterval(subtract);
             endFormat();}
         }, 1000
     );
@@ -217,15 +217,15 @@ var viewSavedScores = function() {
 var loadScores = function() {
     //set content of quiz elements
     titleEl.textContent = "Score Board";
-    paraEl.textContent = ""
+    paraEl.textContent = "";
     //if no scores saved, generate message, if scores have been saved, create list elements from scores array
     if (scores.length === 0) {
-        paraEl.textContent = "No scores saved yet!"
+        paraEl.textContent = "No scores saved yet!";
     } else {
         for (j = 0; j < scores.length; j++) {
             var item = document.createElement("li");
             item.textContent = scores[j].name + " - " + scores[j].score;
-            item.className = "score-list"
+            item.className = "score-list";
             orderedListEl.appendChild(item);
         };
     };
@@ -245,7 +245,7 @@ var submitForm = function() {
         var savedScoreObj = {
             name: userNameInput,
             score: userScoreInput
-        }
+        };
         scores.push(savedScoreObj);
         uploadScores();
         loadScores();
@@ -262,7 +262,7 @@ var restart = function() {
     var clearScoresButtonEl = document.querySelector(".clearScoresButtonEl");
     clearScoresButtonEl.remove();
     //reset all quiz elements and counters before running start function
-    orderedListEl.innerHTML = ""
+    orderedListEl.innerHTML = "";
     timer = 60;
     i = 0;
     timeRemainingEl.textContent = timer;
@@ -311,7 +311,7 @@ var backButton = function () {
 //clear scores
 var clearScores = function() {
     var clear = window.confirm("Are you sure you want to clear score history?");
-        alert("Score history cleared!")
+        alert("Score history cleared!");
         //clear the list of saved scores on the screen
         for (j = 0; j < scores.length; j++) {
             var scoreListEl = document.querySelector(".score-list");
@@ -343,7 +343,7 @@ var downloadScores = function() {
             var savedScoreObj = {
                 name: savedScores[j].name,
                 score: savedScores[j].score
-            }
+            };
             scores.push(savedScoreObj);
         };
     };
