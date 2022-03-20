@@ -36,12 +36,8 @@ var questions = [{
 // secondTestElContainer.appendChild(secondTestEl);
 // mainEl.appendChild(secondTestElContainer);
 
-//if the event.target is incorrect, display the wrong! subheading and decrease the amount of time left
 //when time runs out, a form field needs to be generated and that data stored in localStorage
 //view high scores button in header should have an on click event listener
-//time countdown needs a setInterval() and display that value every 1000 miliseconds
-//after every second, update the value to decrease by one until the value is zero
-//add a landing page that has a button that triggers the setTimeout
 //add class values to all dynamically created html elements in order to be styled
 
 //link HTML elements
@@ -134,7 +130,7 @@ var startQuiz = function() {
     var subtract = setInterval( function() {
         timer--;
         timeRemainingEl.textContent = timer;
-        if (timer === 0 || i === questions.length) {
+        if (timer <= 0 || i > questions.length) {
             clearInterval(subtract)
             endFormat();}
         }, 1000
@@ -160,6 +156,7 @@ var restart = function() {
     endButtonEl.remove();
     timer = 60;
     i = 0;
+    timeRemainingEl.textContent = timer;
     introFormat();
 }
 
@@ -172,7 +169,7 @@ var quizUpdate = function() {
         correctChoice();
         iterator();
     } else if (i === questions.length) {
-        endFormat();
+        iterator();
     };
 };
 
