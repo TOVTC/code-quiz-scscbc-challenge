@@ -86,6 +86,9 @@ var iterator = function() {
 //correct answer tracker
 correctResponse = ""
 
+//high score array
+var scores = [];
+
 //set up for intro page
 var introFormat = function() {
     titleEl.textContent = "Coding Quiz Challenge"
@@ -115,11 +118,11 @@ var endFormat = function() {
     submitButtonEl.textContent = "Submit";
     submitButtonEl.className = "submit"
     quizEl.appendChild(submitButtonEl);
-    // //button
-    // var endButtonEl = document.createElement("button");
-    // endButtonEl.textContent = "Try Again";
-    // endButtonEl.className = "endButtonEl";
-    // quizEl.appendChild(endButtonEl);
+    //button
+    var endButtonEl = document.createElement("button");
+    endButtonEl.textContent = "Try Again";
+    endButtonEl.className = "endButtonEl";
+    quizEl.appendChild(endButtonEl);
 }
 
 //add a clickHandler function that redirects all functions based on what was clicked
@@ -182,15 +185,33 @@ var submitForm = function(event) {
     var userNameInput = document.querySelector("input[name='user-name']").value;
     var userScoreInput = timeRemainingEl.textContent;
     if (!userNameInput) {
-        alert("You need to add your username!");
+        alert("You need to add a username!");
         return false;
     }
     var highScoreObj = {
         name: userNameInput,
         score: userScoreInput
     }
-    localStorage.setItem("scores", JSON.stringify(highScoreObj));
+    scores.push(highScoreObj);
+    localStorage.setItem("scores", JSON.stringify(scores));
 };
+
+//load high scores
+var loadScores = function() {
+    var savedScores = localStorage.getItem("scores");
+    if (!savedScores) {
+        scores = [];
+        return false;
+    }
+    savedScores = JSON.parse(savedScores);
+    for (j = 0; j < savedScores.length; j++) {
+        var item = document.createElement("li");
+        item.textContent = savedScores[j].name + " - " + savedScores[j].score;
+        orderedListEl.appendChild(item);
+    };
+};
+
+//maybe set the data-score-value of the score so you can add it or remove it from the array?
 
 //update the quiz information
 var quizUpdate = function() {
