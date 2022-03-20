@@ -225,7 +225,7 @@ var uploadScores = function() {
 
 //clear scores
 var clearScores = function() {
-    alert("Score History Cleared!")
+    alert("Score history cleared!")
     for (j = 0; j < scores.length; j++) {
         var scoreListEl = document.querySelector(".score-list");
         scoreListEl.remove();
