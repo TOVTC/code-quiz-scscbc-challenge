@@ -51,3 +51,7 @@ button {
 div ol li:hover {
     color: rgb(0, 169, 199);
 }
+
+.viewHighScores:hover {
+    color: rgb(0, 106, 192);
+}
