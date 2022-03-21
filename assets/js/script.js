@@ -311,6 +311,9 @@ var backButton = function () {
 //clear scores
 var clearScores = function() {
     var clear = window.confirm("Are you sure you want to clear score history?");
+    if (!clear) {
+        return false;
+    } else {
         alert("Score history cleared!");
         //clear the list of saved scores on the screen
         for (j = 0; j < scores.length; j++) {
@@ -321,6 +324,7 @@ var clearScores = function() {
         scores = [];
         uploadScores();
         restart();
+    }
 };
 
 //upload scores
