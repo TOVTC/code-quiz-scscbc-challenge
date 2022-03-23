@@ -24,7 +24,8 @@ Made with ❤️ by TOVTC
 MIT License
 
 ## Project status
-Submitted 2022Mar20
+Submitted 2022Mar20</br>
+Note - additional commits made after March 20th represent further streamlining of code and do not fundamentally change the functional logic originally submitted. I became consumed with the idea of making a button generator/deletion function, and had to pursue my curiosity to its logical end - and I succeeded.
 
 ## Assignment Information - Web APIs Challenge: Code Quiz
 ### User Story
