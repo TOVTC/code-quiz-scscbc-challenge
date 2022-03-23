@@ -47,7 +47,7 @@ quizEl.appendChild(paraEl);
 var i = 0;
 var iterator = function() {
     i = i+1;
-};
+}
 
 //correct answer tracker
 correctResponse = "";
@@ -74,27 +74,41 @@ var clickHandler = function(event) {
         backButton();
     } else if (targetEl.matches(".viewSavedScores")) {
         viewSavedScores();
-    };
-};
+    }
+}
 
-//create buttons
+//element creation and deletion variables
+var cls = "";
+var cnt = "";
+var del = "";
+
+//create any button and delete any element
+var createButton = function (cls, cnt){
+    var buttonEl = document.createElement("button");
+    buttonEl.className = cls;
+    buttonEl.textContent = cnt;
+    quizEl.appendChild(buttonEl);
+    console.log(buttonEl);
+}
+
+var delButton = function() {
+    var buttonEl = document.querySelector(del);
+    buttonEl.remove();
+}
+
+//create saved scores button
 var viewScores = function() {
     var savedScoresEl = document.createElement("p");
     savedScoresEl.textContent = "View Saved Scores";
     savedScoresEl.className = "viewSavedScores";
     headerEl.appendChild(savedScoresEl);
-};
+}
 
-//delete buttons
+//delete saved scores button
 var delViewScores = function() {
     var viewSavedScoresEl = document.querySelector(".viewSavedScores");
     viewSavedScoresEl.remove();
-};
-
-var delStartBtn = function() {
-    var startButtonEl = document.querySelector(".startButtonEl");
-    startButtonEl.remove();
-};
+}
 
 //set up for intro page
 var introFormat = function() {
@@ -102,16 +116,16 @@ var introFormat = function() {
     titleEl.textContent = "Coding Quiz Challenge";
     paraEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!";
     //generate start button
-    var startButtonEl = document.createElement("button");
-    startButtonEl.textContent = "Start Quiz";
-    startButtonEl.className = "startButtonEl";
-    quizEl.appendChild(startButtonEl);
-};
+    cnt = "Start Quiz";
+    cls = "startButtonEl"
+    createButton(cls, cnt);
+}
 
 //when the quiz button is clicked, clear the introFormat items, start the timer, and run the quizUpdate function
 var startQuiz = function() {
     //remove start button and option to view saved scores
-    delStartBtn();
+    del = ".startButtonEl";
+    delButton(del);
     delViewScores();
     //run quizUpdate and start countdown
     quizUpdate();
@@ -127,7 +141,7 @@ var startQuiz = function() {
             endFormat();}
         }, 1000
     );
-};
+}
 
 //update the quiz information
 var quizUpdate = function() {
@@ -140,8 +154,8 @@ var quizUpdate = function() {
         iterator();
     } else if (i === questions.length) {
         iterator();
-    };
-};
+    }
+}
 
 //an ol is composed of li items, so create an li item and use array at index j to assign the text value of each li item
 var arrayToList = function(){
@@ -153,28 +167,28 @@ var arrayToList = function(){
         item.textContent = questions[i].choices[j];
         item.className = ".listEl";
         orderedListEl.appendChild(item);
-    };
-};
+    }
+}
 
 //update correct answer in each question
 var correctChoice = function() {
     if (i < questions.length) {
         correctResponse = questions[i].correct;
-    };
-};
+    }
+}
 
 //correct answer was selected
 var correctAnswer = function() {
     paraEl.textContent = "Correct!"
     setTimeout(quizUpdate, 500);
-};
+}
 
 //incorrect answer was selected
 var incorrectAnswer = function() {
     paraEl.textContent = "Incorrect!"
     timer = timer-10;
     setTimeout(quizUpdate, 500);
-};
+}
 
 //set up for end page
 var endFormat = function() {
@@ -198,20 +212,20 @@ var endFormat = function() {
     submitButtonEl.textContent = "Submit";
     submitButtonEl.className = "submit"
     quizEl.appendChild(submitButtonEl);
-};
+}
 
 //load saved scores page
 var viewSavedScores = function() {
     //button to go back to home page
-    var backButtonEl = document.createElement("button");
-    backButtonEl.textContent = "Back";
-    backButtonEl.className = "backButtonEl";
-    quizEl.appendChild(backButtonEl);
+    cnt = "Back";
+    cls = "backButtonEl"
+    createButton(cls, cnt);
     //remove the view saved scores and start quiz button before loading scores
     delViewScores();
-    delStartBtn();
+    del = ".startButtonEl";
+    delButton(del);
     loadScores();
-};
+}
 
 //load scores
 var loadScores = function() {
@@ -227,9 +241,9 @@ var loadScores = function() {
             item.textContent = scores[j].name + " - " + scores[j].score;
             item.className = "score-list";
             orderedListEl.appendChild(item);
-        };
-    };
-};
+        }
+    }
+}
 
 
 //submit
@@ -245,68 +259,66 @@ var submitForm = function() {
         var savedScoreObj = {
             name: userNameInput,
             score: userScoreInput
-        };
+        }
         scores.push(savedScoreObj);
         uploadScores();
         loadScores();
         scoreBoardScreen();
     }
-};
+}
 
 //restart game
 var restart = function() {
     //generate the view saved scores element again
     viewScores();
-    var endButtonEl = document.querySelector(".endButtonEl");
-    endButtonEl.remove();
-    var clearScoresButtonEl = document.querySelector(".clearScoresButtonEl");
-    clearScoresButtonEl.remove();
+    del = ".endButtonEl";
+    delButton(del);
+    del = ".clearScoresButtonEl";
+    delButton(del);
     //reset all quiz elements and counters before running start function
     orderedListEl.innerHTML = "";
     timer = 60;
     i = 0;
     timeRemainingEl.textContent = timer;
     introFormat();
-};
+}
 
 //delete submit form and generate new buttons
 var scoreBoardScreen = function() {
     //remove submit form elements
-    var enterNameEl = document.querySelector(".enterNameEl");
-    enterNameEl.remove();
-    var formEl = document.querySelector(".scoreFormEl");
-    formEl.remove();
-    var submitButtonEl = document.querySelector(".submit");
-    submitButtonEl.remove();
+    del = ".enterNameEl"
+    delButton(del);
+    del = ".scoreFormEl"
+    delButton(del);
+    del = ".submit"
+    delButton(del);
     //create new buttons
-    var endButtonEl = document.createElement("button");
-    endButtonEl.textContent = "Try Again";
-    endButtonEl.className = "endButtonEl";
-    quizEl.appendChild(endButtonEl);
-    var clearScoresButtonEl = document.createElement("button");
-    clearScoresButtonEl.textContent = "Clear Scores";
-    clearScoresButtonEl.className = "clearScoresButtonEl";
-    quizEl.appendChild(clearScoresButtonEl);
-};
+    cls = "endButtonEl";
+    cnt = "Try Again";
+    createButton(cls, cnt);
+    cnt = "Clear Scores";
+    cls = "clearScoresButtonEl"
+    createButton(cls, cnt);
+}
 
 //back to home screen
 var backButton = function () {
     //create the view saved scores button again
     viewScores();
     //remove the back and clear score buttons
-    var backButtonEl = document.querySelector(".backButtonEl");
-    backButtonEl.remove();
+    del = ".backButtonEl";
+    delButton(del);
     //clear the list of saved scores on the screen
     if (!scores) {
         return false;
     } else {
         for (j = 0; j < scores.length; j++) {
-        var scoreListEl = document.querySelector(".score-list");
-        scoreListEl.remove();
+        del = ".score-list";
+        delButton(del);
         }
-    };
+    }
     introFormat();
-};
+}
 
 //clear scores
 var clearScores = function() {
@@ -319,18 +331,18 @@ var clearScores = function() {
         for (j = 0; j < scores.length; j++) {
             var scoreListEl = document.querySelector(".score-list");
             scoreListEl.remove();
-        };
+        }
         //set the scores array to be empty and update localStorage with blank array before restarting
         scores = [];
         uploadScores();
         restart();
     }
-};
+}
 
 //upload scores
 var uploadScores = function() {
     localStorage.setItem("scores", JSON.stringify(scores));
-};
+}
 
 //download scores
 var downloadScores = function() {
@@ -347,11 +359,11 @@ var downloadScores = function() {
             var savedScoreObj = {
                 name: savedScores[j].name,
                 score: savedScores[j].score
-            };
+            }
             scores.push(savedScoreObj);
-        };
-    };
-};
+        }
+    }
+}
 
 //add an event listener for the form to enable button functionality
 quizEl.addEventListener("click", clickHandler);
