@@ -52,7 +52,14 @@ correctResponse = "";
 //saved scores array
 var scores = [];
 
-//create any button
+//update correct answer in each question
+var correctChoice = function() {
+    if (i < questions.length) {
+        correctResponse = questions[i].correct;
+    }
+}
+
+//create any button in the quiz element
 var createButton = function (cls, cnt){
     var buttonEl = document.createElement("button");
     buttonEl.className = cls;
@@ -86,9 +93,12 @@ var clickHandler = function(event) {
     if (targetEl.matches(".startButtonEl")) {
         startQuiz();
     } else if (targetEl.textContent === correctResponse) {
-        correctAnswer();
+        paraEl.textContent = "Correct!";
+        setTimeout(quizUpdate, 500);
     } else if (targetEl.className === ".listEl" && targetEl.textContent !== correctResponse) {
-        incorrectAnswer();
+        paraEl.textContent = "Incorrect!";
+        timer = timer-10;
+        setTimeout(quizUpdate, 500);
     } else if (targetEl.matches(".endButtonEl")) {
         restart();
     } else if (targetEl.matches(".submit")) {
@@ -104,19 +114,15 @@ var clickHandler = function(event) {
 
 //set up for intro page
 var introFormat = function() {
-    //title and text
     titleEl.textContent = "Coding Quiz Challenge";
     paraEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!";
-    //generate start button
     createButton("startButtonEl", "Start Quiz");
 }
 
 //when the quiz button is clicked, clear the introFormat items, start the timer, and run the quizUpdate function
 var startQuiz = function() {
-    //remove start button and option to view saved scores
     delButton(".startButtonEl");
     delViewScores();
-    //run quizUpdate and start countdown
     quizUpdate();
     var subtract = setInterval( function() {
         timer--;
@@ -134,7 +140,6 @@ var startQuiz = function() {
 
 //update the quiz information
 var quizUpdate = function() {
-    //assign properties from questions array to quiz elements
     if (i < questions.length) {
         titleEl.textContent = questions[i].question;
         paraEl.textContent = "";
@@ -148,7 +153,6 @@ var quizUpdate = function() {
 
 //an ol is composed of li items, so create an li item and use array at index j to assign the text value of each li item
 var arrayToList = function(){
-    //reset orderedListEl
     orderedListEl.innerHTML = "";
     //for the length of the choices array of the question in the questions array at the current value of i, create an li element and assign it to the ol element
     for (j = 0; j < questions[i].choices.length; j++) {
@@ -157,26 +161,6 @@ var arrayToList = function(){
         item.className = ".listEl";
         orderedListEl.appendChild(item);
     }
-}
-
-//update correct answer in each question
-var correctChoice = function() {
-    if (i < questions.length) {
-        correctResponse = questions[i].correct;
-    }
-}
-
-//correct answer was selected
-var correctAnswer = function() {
-    paraEl.textContent = "Correct!";
-    setTimeout(quizUpdate, 500);
-}
-
-//incorrect answer was selected
-var incorrectAnswer = function() {
-    paraEl.textContent = "Incorrect!";
-    timer = timer-10;
-    setTimeout(quizUpdate, 500);
 }
 
 //set up for end page
@@ -205,9 +189,7 @@ var endFormat = function() {
 
 //load saved scores page
 var viewSavedScores = function() {
-    //button to go back to home page
     createButton("backButtonEl", "Back");
-    //remove the view saved scores and start quiz button before loading scores
     delViewScores();
     delButton(".startButtonEl");
     loadScores();
@@ -215,7 +197,6 @@ var viewSavedScores = function() {
 
 //load scores
 var loadScores = function() {
-    //set content of quiz elements
     titleEl.textContent = "Score Board";
     paraEl.textContent = "";
     //if no scores saved, generate message, if scores have been saved, create list elements from scores array
@@ -255,7 +236,6 @@ var submitForm = function() {
 
 //restart game
 var restart = function() {
-    //generate the view saved scores element again
     viewScores();
     delButton(".endButtonEl");
     delButton(".clearScoresButtonEl");
@@ -269,20 +249,16 @@ var restart = function() {
 
 //delete submit form and generate new buttons
 var scoreBoardScreen = function() {
-    //remove submit form elements
     delButton(".enterNameEl");
     delButton(".scoreFormEl");
     delButton(".submit");
-    //create new buttons
     createButton("endButtonEl", "Try Again");
     createButton("clearScoresButtonEl", "Clear Scores");
 }
 
 //back to home screen
 var backButton = function () {
-    //create the view saved scores button again
     viewScores();
-    //remove the back and clear score buttons
     delButton(".backButtonEl");
     //clear the list of saved scores on the screen
     if (!scores) {
@@ -304,8 +280,7 @@ var clearScores = function() {
         alert("Score history cleared!");
         //clear the list of saved scores on the screen
         for (j = 0; j < scores.length; j++) {
-            var scoreListEl = document.querySelector(".score-list");
-            scoreListEl.remove();
+            delButton(".score-list");
         }
         //set the scores array to be empty and update localStorage with blank array before restarting
         scores = [];
@@ -321,7 +296,6 @@ var uploadScores = function() {
 
 //download scores
 var downloadScores = function() {
-    //retrieve scores from localStorage
     var savedScores = localStorage.getItem("scores");
     //for every element in the localStorage array, change the retrieved string into an object and save to the scores array
     if (!savedScores) {
@@ -349,6 +323,7 @@ quizEl.addEventListener("submit", submitForm);
 //add an event listener for the form to enable button functionality
 headerEl.addEventListener("click", clickHandler);
 
+//download scores from local storage, generate view scores button, generate intro format
 downloadScores();
 viewScores();
 introFormat();
