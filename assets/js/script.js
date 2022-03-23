@@ -26,22 +26,19 @@ var headerEl = document.querySelector("#header");
 var timeDisplayEl = document.querySelector("#time-display");
 var quizEl = document.querySelector("#quiz");
 
+//initial quiz format set up
+var titleEl = document.querySelector("#quiz-title");
+var orderedListEl = document.querySelector("#quiz-list");
+var paraEl = document.querySelector("#quiz-text");
+
 //time remaining
 var timer = 60;
 
 //create time remaining counter
 var timeRemainingEl = document.createElement("p");
-timeRemainingEl.className = "time-remaining"
+timeRemainingEl.className = "time-remaining";
 timeRemainingEl.textContent = timer;
 timeDisplayEl.appendChild(timeRemainingEl);
-
-//initial quiz format set up
-var titleEl = document.querySelector("#quiz-title");
-var orderedListEl = document.createElement("ol");
-orderedListEl.className = "orderedListEl";
-quizEl.appendChild(orderedListEl);
-var paraEl = document.createElement("p");
-quizEl.appendChild(paraEl);
 
 //question counter
 var i = 0;
@@ -54,6 +51,34 @@ correctResponse = "";
 
 //saved scores array
 var scores = [];
+
+//create any button
+var createButton = function (cls, cnt){
+    var buttonEl = document.createElement("button");
+    buttonEl.className = cls;
+    buttonEl.textContent = cnt;
+    quizEl.appendChild(buttonEl);
+}
+
+//delete any element
+var delButton = function(del) {
+    var buttonEl = document.querySelector(del);
+    buttonEl.remove();
+}
+
+//create saved scores button
+var viewScores = function() {
+    var savedScoresEl = document.createElement("p");
+    savedScoresEl.textContent = "View Saved Scores";
+    savedScoresEl.className = "viewSavedScores";
+    headerEl.appendChild(savedScoresEl);
+}
+
+//delete saved scores button
+var delViewScores = function() {
+    var viewSavedScoresEl = document.querySelector(".viewSavedScores");
+    viewSavedScoresEl.remove();
+}
 
 //add a clickHandler function that redirects all functions based on what was clicked
 var clickHandler = function(event) {
@@ -77,55 +102,19 @@ var clickHandler = function(event) {
     }
 }
 
-//element creation and deletion variables
-var cls = "";
-var cnt = "";
-var del = "";
-
-//create any button and delete any element
-var createButton = function (cls, cnt){
-    var buttonEl = document.createElement("button");
-    buttonEl.className = cls;
-    buttonEl.textContent = cnt;
-    quizEl.appendChild(buttonEl);
-    console.log(buttonEl);
-}
-
-var delButton = function() {
-    var buttonEl = document.querySelector(del);
-    buttonEl.remove();
-}
-
-//create saved scores button
-var viewScores = function() {
-    var savedScoresEl = document.createElement("p");
-    savedScoresEl.textContent = "View Saved Scores";
-    savedScoresEl.className = "viewSavedScores";
-    headerEl.appendChild(savedScoresEl);
-}
-
-//delete saved scores button
-var delViewScores = function() {
-    var viewSavedScoresEl = document.querySelector(".viewSavedScores");
-    viewSavedScoresEl.remove();
-}
-
 //set up for intro page
 var introFormat = function() {
     //title and text
     titleEl.textContent = "Coding Quiz Challenge";
     paraEl.textContent = "Try to answer the following code-related questions within the time limit. Keep in mind that incorrect answers will penalize your score/time by ten seconds!";
     //generate start button
-    cnt = "Start Quiz";
-    cls = "startButtonEl"
-    createButton(cls, cnt);
+    createButton("startButtonEl", "Start Quiz");
 }
 
 //when the quiz button is clicked, clear the introFormat items, start the timer, and run the quizUpdate function
 var startQuiz = function() {
     //remove start button and option to view saved scores
-    del = ".startButtonEl";
-    delButton(del);
+    delButton(".startButtonEl");
     delViewScores();
     //run quizUpdate and start countdown
     quizUpdate();
@@ -179,13 +168,13 @@ var correctChoice = function() {
 
 //correct answer was selected
 var correctAnswer = function() {
-    paraEl.textContent = "Correct!"
+    paraEl.textContent = "Correct!";
     setTimeout(quizUpdate, 500);
 }
 
 //incorrect answer was selected
 var incorrectAnswer = function() {
-    paraEl.textContent = "Incorrect!"
+    paraEl.textContent = "Incorrect!";
     timer = timer-10;
     setTimeout(quizUpdate, 500);
 }
@@ -217,13 +206,10 @@ var endFormat = function() {
 //load saved scores page
 var viewSavedScores = function() {
     //button to go back to home page
-    cnt = "Back";
-    cls = "backButtonEl"
-    createButton(cls, cnt);
+    createButton("backButtonEl", "Back");
     //remove the view saved scores and start quiz button before loading scores
     delViewScores();
-    del = ".startButtonEl";
-    delButton(del);
+    delButton(".startButtonEl");
     loadScores();
 }
 
@@ -271,10 +257,8 @@ var submitForm = function() {
 var restart = function() {
     //generate the view saved scores element again
     viewScores();
-    del = ".endButtonEl";
-    delButton(del);
-    del = ".clearScoresButtonEl";
-    delButton(del);
+    delButton(".endButtonEl");
+    delButton(".clearScoresButtonEl");
     //reset all quiz elements and counters before running start function
     orderedListEl.innerHTML = "";
     timer = 60;
@@ -286,19 +270,12 @@ var restart = function() {
 //delete submit form and generate new buttons
 var scoreBoardScreen = function() {
     //remove submit form elements
-    del = ".enterNameEl"
-    delButton(del);
-    del = ".scoreFormEl"
-    delButton(del);
-    del = ".submit"
-    delButton(del);
+    delButton(".enterNameEl");
+    delButton(".scoreFormEl");
+    delButton(".submit");
     //create new buttons
-    cls = "endButtonEl";
-    cnt = "Try Again";
-    createButton(cls, cnt);
-    cnt = "Clear Scores";
-    cls = "clearScoresButtonEl"
-    createButton(cls, cnt);
+    createButton("endButtonEl", "Try Again");
+    createButton("clearScoresButtonEl", "Clear Scores");
 }
 
 //back to home screen
@@ -306,15 +283,13 @@ var backButton = function () {
     //create the view saved scores button again
     viewScores();
     //remove the back and clear score buttons
-    del = ".backButtonEl";
-    delButton(del);
+    delButton(".backButtonEl");
     //clear the list of saved scores on the screen
     if (!scores) {
         return false;
     } else {
         for (j = 0; j < scores.length; j++) {
-        del = ".score-list";
-        delButton(del);
+        delButton(".score-list");
         }
     }
     introFormat();
