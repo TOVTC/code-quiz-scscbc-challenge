@@ -62,3 +62,7 @@ div ol li:hover {
 .viewSavedScores:hover {
     color: rgb(0, 106, 192);
 }
+
+button:focus {
+    background: rgb(0, 169, 199);
+}
